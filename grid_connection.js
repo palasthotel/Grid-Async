@@ -7,4 +7,7 @@ module.exports=function Connection(socket) {
 	this.emit=function(event,data){
 		this.socket.emit(event,data);
 	}
+	this.on=function(event,callback) {
+		this.socket.on(event,callback);
+	}
 }

@@ -34,9 +34,15 @@ module.exports.cleanup=function() {
 }
 
 module.exports.emit=function(from,event,data) {
+	module.exports.each(from,function(_conn) {
+		_conn.emit(event,data);
+	});
+}
+
+module.exports.each=function(from,callback) {
 	if(!from.joined)return;
 	_.each(module.exports.DATA.DOMAINS[from.domain][from.path],function(_conn,_idx,_list){
 		if(_conn===from)return;
-		_conn.emit(event,data);
+		callback(_conn);
 	});
 }

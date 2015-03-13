@@ -6,6 +6,11 @@ var _ = require("underscore");
 var Connection = require("./grid_connection");
 var backend=require("./grid_backend");
 
+var authors=require('./grid_authors');
+var locking=require("./grid_locking");
+var pasteboard=require('./grid_pasteboard');
+var modules=[new locking(),new authors(),new pasteboard()];
+
 app.listen(61000);
 
 /**
@@ -24,35 +29,18 @@ io.on('connection', function (socket) {
 	var conn=new Connection(socket);
 	backend.DATA.CONNECTIONS.push(conn);
 	console.log("Connected. "+backend.DATA.CONNECTIONS.length+" Connections open.");
-	socket.on('authors.join', function(data){
-		conn.joined=true;
-		console.log("user connected! "+JSON.stringify(data));
-		conn.author=data.author;
-		conn.domain=data.domain;
-		conn.path=data.path;
-		backend.ensureDomainAndPath(data.domain,data.path);
-		backend.DATA.DOMAINS[conn.domain][conn.path].push(conn);
-		var usersJoined=[];
-		_.each(backend.DATA.DOMAINS[conn.domain][conn.path],function(_conn,idx,_path){
-			if(_conn===conn)return;
-			usersJoined.push(_conn.author);
-		});
-		backend.emit(conn,"authors.joined",conn.author);
-		console.log("Authorlist emitted: "+JSON.stringify(usersJoined));
-		conn.emit("authors.list",usersJoined);
+	_.each(modules,function(module,index,_modules){
+		module.connected(conn);
 	});
-	
 	/**
 	* connection lost to user
 	* 
 	*/
 	socket.on('disconnect', function (reason) {
 		console.log("Disconnected.");
-		if(conn.joined){
-			backend.emit(conn,"authors.left",conn.author);
-			backend.DATA.DOMAINS[conn.domain][conn.path]=_.without(backend.DATA.DOMAINS[conn.domain][conn.path],conn);
-			backend.cleanup();
-		}
+		_.each(modules,function(module,index,_modules){
+			module.disconnected(conn);
+		});
 		backend.DATA.CONNECTIONS=_.without(backend.DATA.CONNECTIONS,conn);
 		console.log("Disconnected. "+backend.DATA.CONNECTIONS.length+" Connections open.");
 	});
