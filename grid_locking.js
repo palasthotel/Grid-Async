@@ -33,7 +33,7 @@ module.exports=function(){
 			backend.each(conn,function(_conn){
 				if(_conn.hasLock)
 				{
-					_conn.emit("locking.lockRequested",conn.identifier);
+					_conn.emit("locking.lockRequested",{identifier: conn.identifier});
 				}
 			});
 		});
