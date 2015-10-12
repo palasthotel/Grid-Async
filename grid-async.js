@@ -1,4 +1,4 @@
-var Config = require('config');
+var Config = require('./config');
 
 var app = require('http').createServer(http_handler);
 var io = require('socket.io')(app);
