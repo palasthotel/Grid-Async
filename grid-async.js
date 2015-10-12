@@ -1,3 +1,4 @@
+var Config = require('config');
 
 var app = require('http').createServer(http_handler);
 var io = require('socket.io')(app);
@@ -11,7 +12,7 @@ var locking=require("./grid_locking");
 var pasteboard=require('./grid_pasteboard');
 var modules=[new locking(),new authors(),new pasteboard()];
 
-app.listen(61000);
+app.listen(Config.port);
 
 /**
  * http request http_handler
