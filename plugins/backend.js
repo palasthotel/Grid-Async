@@ -42,7 +42,7 @@ module.exports = function(plug){
 	}
 
 	this.emit=function(from,event,data) {
-		module.exports.each(from,function(_conn) {
+		this.each(from,function(_conn) {
 			_conn.emit(event,data);
 		});
 	}

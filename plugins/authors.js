@@ -33,10 +33,10 @@ module.exports = function(plug){
 			conn.identifier=uuid.v1();
 			conn.domain=data.domain;
 			conn.path=data.path;
-			backend.ensureDomainAndPath(data.domain,data.path);
-			backend.DATA.DOMAINS[conn.domain][conn.path].push(conn);
+			_backend.ensureDomainAndPath(data.domain,data.path);
+			_backend.DATA.DOMAINS[conn.domain][conn.path].push(conn);
 			var usersJoined=[];
-			_.each(backend.DATA.DOMAINS[conn.domain][conn.path],function(_conn,idx,_path){
+			_.each(_backend.DATA.DOMAINS[conn.domain][conn.path],function(_conn,idx,_path){
 				if(_conn===conn)return;
 				usersJoined.push({author:_conn.author,identifier:_conn.identifier});
 			});
