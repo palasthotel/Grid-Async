@@ -18,8 +18,14 @@ module.exports = function(plug){
 		_backend = plug.get_plugin("backend");
 		_socket = plug.get_router().ws();
 		_connection = plug.get_plugin("connection");
-		_socket.on('connection', function (socket) {
-			var conn= new _connection.instance(socket);
+		_socket.on('connection', _ws_connection );
+	}
+
+	/**
+	 * websocket events
+	 */
+	function _ws_connection(socket){
+		var conn= new _connection.instance(socket);
 			_backend.DATA.CONNECTIONS.push(conn);
 			console.log("Connected. "+_backend.DATA.CONNECTIONS.length+" Connections open.");
 			plug.get_notification().emit('connected',conn);
@@ -33,7 +39,6 @@ module.exports = function(plug){
 				_backend.DATA.CONNECTIONS=_.without(_backend.DATA.CONNECTIONS,conn);
 				console.log("Disconnected. "+_backend.DATA.CONNECTIONS.length+" Connections open.");
 			});
-		});
 	}
 
 }
