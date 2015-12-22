@@ -9,6 +9,7 @@ module.exports = function(plug){
 	var _backend = null;
 	var _socket = null;
 	var _connection = null;
+	var self = this;
 
 	/**
 	 * init event tracking on plug ready
@@ -35,10 +36,17 @@ module.exports = function(plug){
 			*/
 			socket.on('disconnect', function (reason) {
 				console.log("Disconnected.");
-				plug.get_notification().emit('disconnected',conn);
-				_backend.DATA.CONNECTIONS=_.without(_backend.DATA.CONNECTIONS,conn);
-				console.log("Disconnected. "+_backend.DATA.CONNECTIONS.length+" Connections open.");
+				self.disconnect(conn);
 			});
+	}
+
+	/**
+	 * disconnect connection
+	 */
+	this.disconnect = function disconnect(conn){
+		plug.get_notification().emit('disconnected',conn);
+		_backend.DATA.CONNECTIONS=_.without(_backend.DATA.CONNECTIONS,conn);
+		console.log("Disconnected. "+_backend.DATA.CONNECTIONS.length+" Connections open.");
 	}
 
 }

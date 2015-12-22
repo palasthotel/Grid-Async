@@ -1,0 +1,89 @@
+
+
+module.exports = function(plug){
+	var EventEmitter = require('events').EventEmitter;
+	var self = this;
+
+	/**
+	 * vars
+	 */
+	var _connection_handler = null;
+	var _authors = null;
+	var _events = new EventEmitter();
+
+	/**
+	 * init event tracking on plug ready
+	 */
+	plug.get_notification().on('ready', ready);
+	function ready(){
+		_connection_handler = plug.get_plugin("connection_handler");
+		_authors = plug.get_plugin("authors");
+		_authors.on_joined(_joined);
+	}
+
+	function _joined(conn) {
+		conn.emit("ping.send",{});
+		new Pinger(conn);
+	}
+
+	var Pinger = function(conn){
+		var _conn = conn;
+		var _countdown = null;
+		var _sendtimer = null;
+		function _clearTimeouts(){
+			clearTimeout(_countdown);
+			clearTimeout(_sendtimer);
+		}
+		/**
+		 * send ping to client
+		 */
+		function _send(){
+			console.log("SEND");
+			_events.emit('send',conn);
+			_conn.emit('ping.send');
+			_clearTimeouts();
+			_countdown = setTimeout(_lost,30000);
+		}
+		/**
+		 * if signal was lost
+		 */
+		function _lost(){
+			console.log("LOST");
+			_events.emit('lost',conn);
+			_clearTimeouts();
+			_connection_handler.disconnect(_conn);
+		}
+		/**
+		 * received ping from client
+		 */
+		function _on_received(){
+			console.log('RECEIVED');
+			_events.emit('received',conn);
+			_clearTimeouts();
+			_sendtimer = setTimeout(_send,4000);
+		}
+		_conn.on('ping.received',_on_received);
+		/**
+		 * start sending pings!
+		 */
+		_send();
+
+		/**
+		 * ping events
+		 */
+		function _on(event, callback){
+			_events.on(event,callback);
+		}
+		this.on_send = function(callback){
+			_on("send", callback);
+		}
+		this.on_lost = function(callback){
+			_on("lost", callback);
+		}
+		this.on_received = function(callback){
+			_on("received", callback);
+		}
+	};
+
+
+}
