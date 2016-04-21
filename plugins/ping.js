@@ -19,11 +19,18 @@ module.exports = function(plug){
 		_connection_handler = plug.get_plugin("connection_handler");
 		_authors = plug.get_plugin("authors");
 		_authors.on_joined(_joined);
+		plug.get_notification().on('disconnected',_disconnected);
+	}
+
+	function _disconnected(conn) {
+		if(conn.PingService!=null) {
+			conn.PingService.stop();
+		}
+		conn.PingService=null;
 	}
 
 	function _joined(conn) {
-		conn.emit("ping.send",{});
-		new Pinger(conn);
+		conn.PingService=new Pinger(conn);
 	}
 
 	var Pinger = function(conn){
@@ -34,21 +41,21 @@ module.exports = function(plug){
 			clearTimeout(_countdown);
 			clearTimeout(_sendtimer);
 		}
+
+		this.stop=_clearTimeouts;
 		/**
 		 * send ping to client
 		 */
 		function _send(){
-			console.log("SEND");
 			_events.emit('send',conn);
 			_conn.emit('ping.send');
 			_clearTimeouts();
-			_countdown = setTimeout(_lost,30000);
+			_countdown = setTimeout(_lost,5000);
 		}
 		/**
 		 * if signal was lost
 		 */
 		function _lost(){
-			console.log("LOST");
 			_events.emit('lost',conn);
 			_clearTimeouts();
 			_connection_handler.disconnect(_conn);
@@ -57,7 +64,6 @@ module.exports = function(plug){
 		 * received ping from client
 		 */
 		function _on_received(){
-			console.log('RECEIVED');
 			_events.emit('received',conn);
 			_clearTimeouts();
 			_sendtimer = setTimeout(_send,4000);

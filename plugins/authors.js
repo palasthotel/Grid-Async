@@ -33,6 +33,7 @@ module.exports = function(plug){
 			conn.identifier=uuid.v1();
 			conn.domain=data.domain;
 			conn.path=data.path;
+			conn.identity=data.identity;
 			_backend.ensureDomainAndPath(data.domain,data.path);
 			_backend.DATA.DOMAINS[conn.domain][conn.path].push(conn);
 			var usersJoined=[];
@@ -44,6 +45,17 @@ module.exports = function(plug){
 			console.log("Authorlist emitted: "+JSON.stringify(usersJoined));
 			conn.emit("authors.list",usersJoined);
 			_events.emit('joined',conn);
+			if(conn.identity != null) {
+				var count=0;
+				_backend.each(conn,function(hit){
+					if(hit.identity==conn.identity) {
+						count++;
+					}
+				});
+				if(count>=1) {
+					conn.emit("authors.multiplehits",count+1);
+				}
+			}
 		});
 	}
 
