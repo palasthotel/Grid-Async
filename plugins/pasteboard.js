@@ -16,7 +16,7 @@ module.exports = function(plug){
 	/**
 	 * init event tracking on plug ready
 	 */
-	plug.get_notification().on('ready', ready);
+	plug.on_ready(ready);
 	function ready(){
 		_backend = plug.get_plugin("backend");
 		_notification = plug.get_notification();
@@ -45,9 +45,9 @@ module.exports = function(plug){
 			});
 		});
 	}
-	
+
 	function _disconnected(conn) {
-		
+
 	}
 
 

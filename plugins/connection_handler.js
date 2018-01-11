@@ -14,7 +14,7 @@ module.exports = function(plug){
 	/**
 	 * init event tracking on plug ready
 	 */
-	plug.get_notification().on('ready', ready);
+	plug.on_ready(ready);
 	function ready(){
 		_backend = plug.get_plugin("backend");
 		_socket = plug.get_router().ws();
@@ -32,7 +32,7 @@ module.exports = function(plug){
 			plug.get_notification().emit('connected',conn);
 			/**
 			* connection lost to user
-			* 
+			*
 			*/
 			socket.on('disconnect', function (reason) {
 				console.log("Disconnected.");

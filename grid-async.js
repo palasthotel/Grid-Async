@@ -9,4 +9,7 @@ var plug = new Plug({
 
 plug.get_router().ws().on("connection", function(socket){
 	console.log("CONNECTION");
+	socket.on("*", function(){
+		console.log("incoming command");
+	});
 });

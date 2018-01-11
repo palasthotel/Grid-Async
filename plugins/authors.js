@@ -17,7 +17,7 @@ module.exports = function(plug){
 	/**
 	 * init event tracking on plug ready
 	 */
-	plug.get_notification().on('ready', ready);
+	plug.on_ready(ready);
 	function ready(){
 		_backend = plug.get_plugin("backend");
 		_notification = plug.get_notification();
@@ -28,7 +28,7 @@ module.exports = function(plug){
 	function _connected(conn) {
 		conn.on("authors.join",function(data){
 			conn.joined=true;
-			console.log("user connected! "+JSON.stringify(data));
+			// console.log("user connected! "+JSON.stringify(data));
 			conn.author=data.author;
 			conn.identifier=uuid.v1();
 			conn.domain=data.domain;
@@ -42,7 +42,7 @@ module.exports = function(plug){
 				usersJoined.push({author:_conn.author,identifier:_conn.identifier});
 			});
 			_backend.emit(conn,"authors.joined",{author:conn.author,identifier:conn.identifier});
-			console.log("Authorlist emitted: "+JSON.stringify(usersJoined));
+			// console.log("Authorlist emitted: "+JSON.stringify(usersJoined));
 			conn.emit("authors.list",usersJoined);
 			_events.emit('joined',conn);
 			if(conn.identity != null) {

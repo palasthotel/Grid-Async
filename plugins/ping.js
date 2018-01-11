@@ -14,7 +14,7 @@ module.exports = function(plug){
 	/**
 	 * init event tracking on plug ready
 	 */
-	plug.get_notification().on('ready', ready);
+	plug.on_ready(ready);
 	function ready(){
 		_connection_handler = plug.get_plugin("connection_handler");
 		_authors = plug.get_plugin("authors");
