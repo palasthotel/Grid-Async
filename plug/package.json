@@ -4,16 +4,15 @@
   "description": "NodeJS foundation for Palasthotel project.",
   "main": "index.js",
   "dependencies": {
-    "EVENT": "^1.1.1",
-    "body-parser": "^1.15.2",
-    "bull": "^3.3.1",
-    "express": "^4.14.0",
+    "body-parser": "^1.19.0",
+    "bull": "^3.22.6",
+    "express": "^4.17.1",
     "fs": "0.0.2",
     "memcached": "^2.2.2",
-    "mysql": "^2.11.1",
+    "mysql": "^2.18.1",
     "path": "^0.12.7",
-    "socket.io": "^2.0.3",
-    "underscore": "^1.8.3"
+    "socket.io": "^4.1.2",
+    "underscore": "^1.13.1"
   },
   "devDependencies": {},
   "scripts": {
