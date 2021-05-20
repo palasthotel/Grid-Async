@@ -1,3 +1,4 @@
 config.js
 log/*
 *.log
+/node_modules
