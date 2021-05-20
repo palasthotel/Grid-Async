@@ -22,9 +22,11 @@ function Router(config){
 		extended: true
 	}));
 
-	var server = app.listen(_config.port);
+	var server = app.listen(_config.port, ()=>{
+		console.debug("Listeing on port", _config.port)
+	});
 	server.setTimeout(_config.timeout);
-	var io =  socketio(server);
+	var io = socketio(server, _config.socketio);
 
 	this.http = function(){
 		return app;
