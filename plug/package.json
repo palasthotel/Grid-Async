@@ -4,9 +4,9 @@
   "description": "NodeJS foundation for Palasthotel project.",
   "main": "index.js",
   "dependencies": {
-    "body-parser": "^1.19.0",
+    "body-parser": "^1.20.1",
     "bull": "^3.22.6",
-    "express": "^4.17.1",
+    "express": "^4.18.2",
     "fs": "0.0.2",
     "memcached": "^2.2.2",
     "mysql": "^2.18.1",
