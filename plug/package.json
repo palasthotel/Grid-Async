@@ -11,7 +11,7 @@
     "memcached": "^2.2.2",
     "mysql": "^2.18.1",
     "path": "^0.12.7",
-    "socket.io": "^4.1.2",
+    "socket.io": "^4.5.3",
     "underscore": "^1.13.1"
   },
   "devDependencies": {},
